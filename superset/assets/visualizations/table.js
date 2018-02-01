@@ -7,6 +7,25 @@ import './table.css';
 
 const $ = require('jquery');
 
+var formatNumber = d3.format(".1f"),
+    formatCrore = function(x) {
+      return "₹" + formatNumber(x / 1e7) + "Cr";
+    },
+    formatLakh = function(x) {
+      return "₹" + formatNumber(x / 1e5) + "L";
+    },
+    formatThousand = function(x) {
+      return "₹" + formatNumber(x / 1e3) + "k";
+    },
+    formatLowerDenom = function(x) {
+      return "₹" + x;
+    };
+
+function formatAbbr(x) {
+  var v = Math.abs(x);
+  return (v >= .9995e7 ? formatCrore : v >= .9995e5 ? formatLakh : v >= .999e3 ? formatThousand : formatLowerDenom)(x);
+}
+
 dt(window, $);
 
 function tableVis(slice, payload) {
@@ -84,7 +103,9 @@ function tableVis(slice, payload) {
         html = `<span class="like-pre">${val}</span>`;
       }
       if (isMetric) {
-        html = slice.d3format(c, val);
+        html = formatAbbr(val);
+        // html = slice.d3format(c, val);
+        console.log(html);
       }
       if (c[0] === '%') {
         html = d3.format('.3p')(val);

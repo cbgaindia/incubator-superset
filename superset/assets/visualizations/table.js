@@ -104,8 +104,6 @@ function tableVis(slice, payload) {
       }
       if (isMetric) {
         html = formatAbbr(val);
-        // html = slice.d3format(c, val);
-        console.log(html);
       }
       if (c[0] === '%') {
         html = d3.format('.3p')(val);

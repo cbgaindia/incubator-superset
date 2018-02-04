@@ -3,6 +3,7 @@ const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
 
 // input dir
 const APP_DIR = path.resolve(__dirname, './');
@@ -114,6 +115,16 @@ const config = {
       },
     }),
     new ExtractTextPlugin('[name].[chunkhash].css'),
+    new webpack.optimize.DedupePlugin(), 
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.HashedModuleIdsPlugin(),
+    new CompressionPlugin({
+        algorithm: 'gzip',
+        test: /\.js$|\.css$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.8
+    }),
+    new webpack.optimize.AggressiveMergingPlugin() 
   ],
 };
 if (process.env.NODE_ENV === 'production') {
@@ -125,7 +136,7 @@ if (process.env.NODE_ENV === 'production') {
       cache: true,
       workers: 4,
     },
-    compress: false,
+    compress: true,
   });
   config.plugins.push(UJSplugin);
 }

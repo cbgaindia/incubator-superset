@@ -9,6 +9,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
 
+from flask_compress import Compress
 from flask import Flask, redirect
 from flask_appbuilder import AppBuilder, IndexView, SQLA
 from flask_appbuilder.baseviews import expose
@@ -28,7 +29,10 @@ if not os.path.exists(config.DATA_DIR):
 with open(APP_DIR + '/static/assets/backendSync.json', 'r') as f:
     frontend_config = json.load(f)
 
+compress = Compress()
+
 app = Flask(__name__)
+compress.init_app(app)
 app.config.from_object(CONFIG_MODULE)
 conf = app.config
 

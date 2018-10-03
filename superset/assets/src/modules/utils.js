@@ -4,6 +4,25 @@ import $ from 'jquery';
 
 import { formatDate, UTC } from './dates';
 
+var formatNumber = d3.format(",.3s"),
+    formatCrore = function(x) {
+      return "₹ " + formatNumber(x / 1e7) + "Cr";
+    },
+    formatLakh = function(x) {
+      return "₹ " + formatNumber(x / 1e5) + "L";
+    },
+    formatThousand = function(x) {
+      return "₹ " + formatNumber(x / 1e3) + "K";
+    },
+    formatLowerDenom = function(x) {
+      return "₹ " + x;
+    };
+
+function formatAbbr(x) {
+  var v = Math.abs(x);
+  return (v >= .9995e7 ? formatCrore : v >= .9995e5 ? formatLakh : v >= .999e3 ? formatThousand : formatLowerDenom)(x);
+}
+
 const siFormatter = d3.format('.3s');
 
 export function defaultNumberFormatter(n) {
@@ -21,6 +40,9 @@ export function d3FormatPreset(format) {
     return formatDate;
   }
   if (format) {
+    if(format == ",.3s"){
+      return formatAbbr; 
+    }
     return d3.format(format);
   }
   return defaultNumberFormatter;

@@ -197,8 +197,7 @@ class Chart extends React.Component {
           and
              https://github.com/apache/incubator-superset/commit/b6fcc22d5a2cb7a5e92599ed5795a0169385a825
         */}
-        {isExpanded &&
-          slice.description_markeddown && (
+        {slice.description_markeddown && (
             <div
               className="slice_description bs-callout bs-callout-default"
               ref={this.setDescriptionRef}

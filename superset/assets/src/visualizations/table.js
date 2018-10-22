@@ -45,6 +45,25 @@ const propTypes = {
   ]),
 };
 
+var formatNumber = d3.format(",.3s"),
+    formatCrore = function(x) {
+      return "₹ " + formatNumber(x / 1e7) + "Cr";
+    },
+    formatLakh = function(x) {
+      return "₹ " + formatNumber(x / 1e5) + "L";
+    },
+    formatThousand = function(x) {
+      return "₹ " + formatNumber(x / 1e3) + "K";
+    },
+    formatLowerDenom = function(x) {
+      return "₹ " + x;
+    };
+
+function formatCurrency(x) {
+  var v = Math.abs(x);
+  return (v >= .9995e7 ? formatCrore : v >= .9995e5 ? formatLakh : v >= .999e3 ? formatThousand : formatLowerDenom)(x);
+}
+
 const formatValue = d3.format('0,000');
 const formatPercent = d3.format('.3p');
 function NOOP() {}
@@ -131,7 +150,12 @@ function TableVis(element, props) {
         html = `<span class="like-pre">${dompurify.sanitize(val)}</span>`;
       }
       if (isMetric) {
-        html = d3.format(format || '0.3s')(val);
+        if(format){
+          html = d3.format(format || '0.3s')(val);
+        }
+        else{
+          html = formatCurrency(val);
+        }
       }
       if (key[0] === '%') {
         html = formatPercent(val);
